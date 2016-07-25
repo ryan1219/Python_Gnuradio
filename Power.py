@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Power
-# Generated: Mon Jul 25 09:22:30 2016
+# Generated: Mon Jul 25 13:37:53 2016
 ##################################################
 
 if __name__ == '__main__':
@@ -43,7 +43,7 @@ class Power(grc_wxgui.top_block_gui):
         # Variables
         ##################################################
         self.vect_len = vect_len = 1024
-        self.samp_rate = samp_rate = 20
+        self.samp_rate = samp_rate = 10000
         self.mean_length = mean_length = 1
         self.freq = freq = 5.8e09
         self.MuteTx = MuteTx = False
@@ -51,9 +51,9 @@ class Power(grc_wxgui.top_block_gui):
         ##################################################
         # Blocks
         ##################################################
-        self.wxgui_scopesink2_1 = scopesink2.scope_sink_f(
+        self.wxgui_scopesink2_0 = scopesink2.scope_sink_f(
         	self.GetWin(),
-        	title="Scope Plot",
+        	title="Divison",
         	sample_rate=samp_rate,
         	v_scale=0,
         	v_offset=0,
@@ -64,7 +64,7 @@ class Power(grc_wxgui.top_block_gui):
         	trig_mode=wxgui.TRIG_MODE_AUTO,
         	y_axis_label="Counts",
         )
-        self.Add(self.wxgui_scopesink2_1.win)
+        self.Add(self.wxgui_scopesink2_0.win)
         self.wxgui_numbersink2_1 = numbersink2.number_sink_f(
         	self.GetWin(),
         	unit="mW",
@@ -79,7 +79,7 @@ class Power(grc_wxgui.top_block_gui):
         	avg_alpha=1,
         	label="Average received power (mW)",
         	peak_hold=False,
-        	show_gauge=True,
+        	show_gauge=False,
         )
         self.Add(self.wxgui_numbersink2_1.win)
         self.uhd_usrp_source_0 = uhd.usrp_source(
@@ -89,11 +89,13 @@ class Power(grc_wxgui.top_block_gui):
         		channels=range(1),
         	),
         )
+        self.uhd_usrp_source_0.set_clock_source("internal", 0)
         self.uhd_usrp_source_0.set_subdev_spec("A:B", 0)
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
         self.uhd_usrp_source_0.set_center_freq(freq, 0)
         self.uhd_usrp_source_0.set_gain(56, 0)
         self.uhd_usrp_source_0.set_antenna("RX2", 0)
+        self.uhd_usrp_source_0.set_bandwidth(mean_length, 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -106,19 +108,19 @@ class Power(grc_wxgui.top_block_gui):
         self.uhd_usrp_sink_0.set_center_freq(freq, 0)
         self.uhd_usrp_sink_0.set_gain(56, 0)
         self.uhd_usrp_sink_0.set_antenna("TX/RX", 0)
+        self.uhd_usrp_sink_0.set_bandwidth(mean_length, 0)
         self.low_pass_filter_0 = filter.fir_filter_ccf(1, firdes.low_pass(
-        	1, samp_rate, mean_length, 1, firdes.WIN_HAMMING, 6.76))
-        self.blocks_stream_to_vector_0_0 = blocks.stream_to_vector(gr.sizeof_float*1, vect_len)
+        	1, samp_rate, mean_length, 100, firdes.WIN_HAMMING, 6.76))
+        self.blocks_sub_xx_1 = blocks.sub_ff(1)
+        self.blocks_sub_xx_0 = blocks.sub_ff(1)
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_float*1, vect_len)
-        self.blocks_multiply_const_vxx_2 = blocks.multiply_const_vff((1000, ))
-        self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((1000, ))
-        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_float*vect_len, "/home/moez/Desktop/data_7_15/wTx_A_1", False)
-        self.blocks_file_sink_0_0.set_unbuffered(False)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vect_len, "/home/moez/Desktop/data_7_15/wRx_A_1", False)
+        self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((100e3, ))
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vect_len, "/home/moez/Desktop/gnu_binary_data/wRx_A_1", False)
         self.blocks_file_sink_0.set_unbuffered(False)
-        self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(1)
-        self.blocks_complex_to_mag_1 = blocks.complex_to_mag(1)
+        self.blocks_complex_to_real_1 = blocks.complex_to_real(1)
+        self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, mean_length, 1, 0)
+        self.analog_const_source_x_0 = analog.sig_source_f(0, analog.GR_CONST_WAVE, 0, 0, 9.9e4)
         self._MuteTx_check_box = forms.check_box(
         	parent=self.GetWin(),
         	value=self.MuteTx,
@@ -133,18 +135,19 @@ class Power(grc_wxgui.top_block_gui):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.Mute, 0), (self.blocks_complex_to_mag_squared_0, 0))    
+        self.connect((self.Mute, 0), (self.blocks_complex_to_real_1, 0))    
         self.connect((self.Mute, 0), (self.uhd_usrp_sink_0, 0))    
+        self.connect((self.analog_const_source_x_0, 0), (self.blocks_sub_xx_1, 1))    
         self.connect((self.analog_sig_source_x_0, 0), (self.Mute, 0))    
-        self.connect((self.blocks_complex_to_mag_1, 0), (self.blocks_multiply_const_vxx_1, 0))    
-        self.connect((self.blocks_complex_to_mag_1, 0), (self.wxgui_scopesink2_1, 0))    
-        self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_multiply_const_vxx_2, 0))    
-        self.connect((self.blocks_multiply_const_vxx_1, 0), (self.blocks_stream_to_vector_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_1, 0), (self.wxgui_numbersink2_1, 0))    
-        self.connect((self.blocks_multiply_const_vxx_2, 0), (self.blocks_stream_to_vector_0_0, 0))    
+        self.connect((self.blocks_complex_to_real_0, 0), (self.blocks_sub_xx_0, 1))    
+        self.connect((self.blocks_complex_to_real_1, 0), (self.blocks_sub_xx_0, 0))    
+        self.connect((self.blocks_multiply_const_vxx_1, 0), (self.blocks_sub_xx_1, 0))    
         self.connect((self.blocks_stream_to_vector_0, 0), (self.blocks_file_sink_0, 0))    
-        self.connect((self.blocks_stream_to_vector_0_0, 0), (self.blocks_file_sink_0_0, 0))    
-        self.connect((self.low_pass_filter_0, 0), (self.blocks_complex_to_mag_1, 0))    
+        self.connect((self.blocks_sub_xx_0, 0), (self.blocks_multiply_const_vxx_1, 0))    
+        self.connect((self.blocks_sub_xx_1, 0), (self.blocks_stream_to_vector_0, 0))    
+        self.connect((self.blocks_sub_xx_1, 0), (self.wxgui_numbersink2_1, 0))    
+        self.connect((self.blocks_sub_xx_1, 0), (self.wxgui_scopesink2_0, 0))    
+        self.connect((self.low_pass_filter_0, 0), (self.blocks_complex_to_real_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.low_pass_filter_0, 0))    
 
     def get_vect_len(self):
@@ -159,10 +162,10 @@ class Power(grc_wxgui.top_block_gui):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.mean_length, 1, firdes.WIN_HAMMING, 6.76))
         self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
-        self.wxgui_scopesink2_1.set_sample_rate(self.samp_rate)
+        self.wxgui_scopesink2_0.set_sample_rate(self.samp_rate)
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.mean_length, 100, firdes.WIN_HAMMING, 6.76))
 
     def get_mean_length(self):
         return self.mean_length
@@ -170,7 +173,9 @@ class Power(grc_wxgui.top_block_gui):
     def set_mean_length(self, mean_length):
         self.mean_length = mean_length
         self.analog_sig_source_x_0.set_frequency(self.mean_length)
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.mean_length, 1, firdes.WIN_HAMMING, 6.76))
+        self.uhd_usrp_sink_0.set_bandwidth(self.mean_length, 0)
+        self.uhd_usrp_source_0.set_bandwidth(self.mean_length, 0)
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.mean_length, 100, firdes.WIN_HAMMING, 6.76))
 
     def get_freq(self):
         return self.freq
