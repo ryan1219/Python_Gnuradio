@@ -307,10 +307,10 @@ class Window(QtGui.QMainWindow):
 
     #convert a binary file to a txt file, can choose the txt file location and name
     def generate_txt_event(self):
-        choice = QtGui.QMessageBox.warning(self, 'Generate Txt Files',
-                                            "Before process the following procedure, please close the Gnuradio.",
-                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Yes)
-        if choice == QtGui.QMessageBox.Yes:
+        #choice = QtGui.QMessageBox.warning(self, 'Generate Txt Files',
+        #                                    "Before process the following procedure, please close the Gnuradio.",
+        #                                    QtGui.QMessageBox.Yes | QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Yes)
+        #if choice == QtGui.QMessageBox.Yes:
             input_file_name = QtGui.QFileDialog.getOpenFileName(self, 'Input File')
             # 'r' intention to file_generator
             input_file = open(input_file_name, 'r')
@@ -324,8 +324,8 @@ class Window(QtGui.QMainWindow):
             output_file_name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
             print output_file_name
             numpy.savetxt(str(output_file_name), f, delimiter=' ', newline='\n', header='', footer='', comments='# ')
-        else:
-            pass
+        #else:
+        #    pass
 
     ####save the text in text window to a file
     def file_save_event(self):
