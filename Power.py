@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Power
-# Generated: Mon Jul 25 16:52:12 2016
+# Generated: Wed Jul 27 15:23:03 2016
 ##################################################
 
 if __name__ == '__main__':
@@ -65,20 +65,6 @@ class Power(grc_wxgui.top_block_gui):
         	y_axis_label="Counts",
         )
         self.Add(self.wxgui_scopesink2_1.win)
-        self.wxgui_scopesink2_0_0 = scopesink2.scope_sink_f(
-        	self.GetWin(),
-        	title="TxScope Plot",
-        	sample_rate=samp_rate,
-        	v_scale=0,
-        	v_offset=0,
-        	t_scale=0,
-        	ac_couple=False,
-        	xy_mode=False,
-        	num_inputs=1,
-        	trig_mode=wxgui.TRIG_MODE_AUTO,
-        	y_axis_label="Counts",
-        )
-        self.Add(self.wxgui_scopesink2_0_0.win)
         self.wxgui_numbersink2_1 = numbersink2.number_sink_f(
         	self.GetWin(),
         	unit="",
@@ -156,7 +142,6 @@ class Power(grc_wxgui.top_block_gui):
         self.connect((self.blocks_multiply_const_vxx_1, 0), (self.wxgui_numbersink2_1, 0))    
         self.connect((self.blocks_multiply_const_vxx_1, 0), (self.wxgui_scopesink2_1, 0))    
         self.connect((self.blocks_multiply_const_vxx_2, 0), (self.blocks_stream_to_vector_0_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_2, 0), (self.wxgui_scopesink2_0_0, 0))    
         self.connect((self.blocks_stream_to_vector_0, 0), (self.blocks_file_sink_0, 0))    
         self.connect((self.blocks_stream_to_vector_0_0, 0), (self.blocks_file_sink_0_0, 0))    
         self.connect((self.low_pass_filter_0, 0), (self.blocks_complex_to_mag_1, 0))    
@@ -177,7 +162,6 @@ class Power(grc_wxgui.top_block_gui):
         self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.mean_length, 1, firdes.WIN_HAMMING, 6.76))
         self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
-        self.wxgui_scopesink2_0_0.set_sample_rate(self.samp_rate)
         self.wxgui_scopesink2_1.set_sample_rate(self.samp_rate)
 
     def get_mean_length(self):

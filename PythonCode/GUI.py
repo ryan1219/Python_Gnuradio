@@ -94,6 +94,7 @@ class File_Reading_Save(QThread):
             else:
                 text = "%.4f \n" % (sum / self.QUEUE_SIZE)
                 self.output_file.write(text)
+                print text
                 #print "The average of %i sampels is %f mW" % (self.QUEUE_SIZE, sum / self.QUEUE_SIZE)
                 sum = 0.0
                 sampleCount = 0
@@ -260,9 +261,9 @@ class Window(QtGui.QMainWindow):
         input_file_name = "/home/moez/Desktop/gnu_binary_data/wRx_A_1"
 
         if not self.setting_dialog_window.le1.text():
-            print "Empty output file path, please check settings"
+            print "Cannot start. Empty output file path, please check settings"
         elif not self.setting_dialog_window.le2.text():
-            print "No sample time interval selected, please check settings"
+            print "Cannot start. No sample time interval selected, please check settings"
         else:
 
             sample_number = numpy.ceil(self.sample_number_cal(float(self.setting_dialog_window.le2.text())))
@@ -284,19 +285,25 @@ class Window(QtGui.QMainWindow):
 
     #close the reading file thread
     def run_event_terminated(self):
-        self.read.stop()
-        del self.read
+        try:
+            self.read.stop()
+            del self.read
+        except AttributeError:
+            print "Nothing to stop"
 
     #open a file in the disk and display in the text window
     def file_open(self):
         name = QtGui.QFileDialog.getOpenFileName(self, 'Open File')
         # 'r' intention to file_generator
         #print name
-        file = open(name, 'r')
+        if name:
+            file = open(name, 'r')
 
-        with file:
-            context = file.read()
-            self.text_window.setText(context)
+            with file:
+                context = file.read()
+                self.text_window.setText(context)
+        else:
+            pass
 
     def tb_logo_event(self):
         webbrowser.open('http://www.biomindr.com/')
@@ -330,10 +337,13 @@ class Window(QtGui.QMainWindow):
     ####save the text in text window to a file
     def file_save_event(self):
         name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
-        file = open(name, 'w')
-        text = self.text_window.toPlainText()
-        file.write(text)
-        file.close()
+        if name:
+            file = open(name, 'w')
+            text = self.text_window.toPlainText()
+            file.write(text)
+            file.close()
+        else:
+            pass
 
     ####function to close the application
     def close_application(self):
