@@ -1,45 +1,12 @@
-from PyQt4 import QtCore, QtGui
-
-class MyDialog(QtGui.QDialog):
-    def __init__(self, parent=None):
-        super(MyDialog, self).__init__(parent)
-
-        self.buttonBox = QtGui.QDialogButtonBox(self)
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
-
-        self.textBrowser = QtGui.QTextBrowser(self)
-        self.textBrowser.append("This is a QTextBrowser!")
-
-        self.verticalLayout = QtGui.QVBoxLayout(self)
-        self.verticalLayout.addWidget(self.textBrowser)
-        self.verticalLayout.addWidget(self.buttonBox)
-
-class MyWindow(QtGui.QWidget):
-    def __init__(self, parent=None):
-        super(MyWindow, self).__init__(parent)
-
-        self.pushButtonWindow = QtGui.QPushButton(self)
-        self.pushButtonWindow.setText("Click Me!")
-        self.pushButtonWindow.clicked.connect(self.on_pushButton_clicked)
-
-        self.layout = QtGui.QHBoxLayout(self)
-        self.layout.addWidget(self.pushButtonWindow)
-
-        self.dialogTextBrowser = MyDialog(self)
-
-    @QtCore.pyqtSlot()
-    def on_pushButton_clicked(self):
-        self.dialogTextBrowser.exec_()
+import numpy as np
+import scipy.stats as stats
+import pylab as pl
 
 
-if __name__ == "__main__":
-    import sys
-
-    app = QtGui.QApplication(sys.argv)
-    app.setApplicationName('MyWindow')
-
-    main = MyWindow()
-    main.show()
-
-    sys.exit(app.exec_())
+h = sorted([186, 176, 158, 180, 186, 168, 168, 164, 178, 170, 189, 195, 172,
+    187, 180, 186, 185, 168, 179, 178, 183, 179, 170, 175, 186, 159,
+    161, 178, 175, 185, 175, 162, 173, 172, 177, 175, 172, 177, 180])  #sorted
+fit = stats.norm.pdf(h, np.mean(h), np.std(h))  #this is a fitting indeed
+pl.plot(h,fit,'-o')
+pl.hist(h,normed=True)      #use this to draw histogram of your data
+pl.show()                   #use may also need add this

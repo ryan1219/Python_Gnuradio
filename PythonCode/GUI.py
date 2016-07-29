@@ -92,7 +92,7 @@ class File_Reading_Save(QThread):
                 sampleCount = sampleCount + 1
                 sum = sum + data_float[0]
             else:
-                text = "%.4f \n" % (sum / self.QUEUE_SIZE)
+                text = "%.4f\n" % (sum / self.QUEUE_SIZE)
                 self.output_file.write(text)
                 print text
                 #print "The average of %i sampels is %f mW" % (self.QUEUE_SIZE, sum / self.QUEUE_SIZE)
@@ -279,7 +279,9 @@ class Window(QtGui.QMainWindow):
             self.file_reading_thread.start()
 
     def sample_number_cal(self, desire_time_interval):
+
         GNURADIO_SAMPLE_RATE = 81920 #unit: samples/s
+
         raw_data_time_interval = (1/float(GNURADIO_SAMPLE_RATE))*1000 #unit: ms
         return int(desire_time_interval/raw_data_time_interval)
 
