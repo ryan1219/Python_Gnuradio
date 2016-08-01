@@ -7,23 +7,26 @@ def iround(x):
     y = round(x) - .5
     return int(y) + (y > 0)
 
-inputFilePath = "/home/moez/Desktop/data_7_27/1ms_empty.txt"
-
-# set printing options, threshold: total number of array elements which trigger summarization rather than full repr (default 1000).
-#np.set_printoptions(threshold="nan")
-#file = open(inputFilePath, 'r')
+inputFilePath = "/home/moez/Desktop/exp_7_29/2.4g_100k_5k_300"
 
 content = []
 
+#####for txt data
 # with open(inputFilePath, 'r') as ins:
 #     for line in ins:
 #         content.append(line)
-content = [line.rstrip(' \n') for line in open(inputFilePath)]
-content = [float(i) for i in content]
-content = [iround(i) for i in content]
+# content = [line.rstrip(' \n') for line in open(inputFilePath)]
+# content = [float(i) for i in content]
+# content = [iround(i) for i in content]
+#####
+
+#####for binary data
+file = open(inputFilePath)
+content = np.fromfile(file, dtype=np.float32)
+#####
 
 h = sorted(content)  #sorted
-print h
+#print h
 
 fit = stats.norm.pdf(h, np.mean(h), np.std(h))  #this is a fitting indeed
 pl.plot(h,fit,'-o')
