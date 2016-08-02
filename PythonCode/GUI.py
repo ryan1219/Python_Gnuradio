@@ -78,6 +78,7 @@ class File_Reading_Save(QThread):
 
         sum = 0.0
         sampleCount = 0
+        printerCount = 0
 
         for data in fileGenerator:
 
@@ -92,9 +93,12 @@ class File_Reading_Save(QThread):
                 sampleCount = sampleCount + 1
                 sum = sum + data_float[0]
             else:
-                text = "%.4f\n" % (sum / self.QUEUE_SIZE)
+                printerCount = printerCount + 1
+                text = "%.2f\n" % (sum / self.QUEUE_SIZE)
                 self.output_file.write(text)
-                print text
+                if printerCount == 1000:
+                    print text
+                    printerCount = 0
                 #print "The average of %i sampels is %f mW" % (self.QUEUE_SIZE, sum / self.QUEUE_SIZE)
                 sum = 0.0
                 sampleCount = 0
@@ -269,7 +273,7 @@ class Window(QtGui.QMainWindow):
             sample_number = numpy.ceil(self.sample_number_cal(float(self.setting_dialog_window.le2.text())))
 
             print ("Selected sampling time interval is %0.1f ms") % float(self.setting_dialog_window.le2.text())
-            print ("Calculated sampling rate is %i") % sample_number
+            #print ("Calculated sampling rate is %i") % sample_number
 
             self.file_reading_thread = QThread()
             self.read = File_Reading_Save(input_file_name, self.setting_dialog_window.le1.text(), sample_number)
@@ -280,7 +284,7 @@ class Window(QtGui.QMainWindow):
 
     def sample_number_cal(self, desire_time_interval):
 
-        GNURADIO_SAMPLE_RATE = 81920 #unit: samples/s
+        GNURADIO_SAMPLE_RATE = 100000 #unit: samples/s
 
         raw_data_time_interval = (1/float(GNURADIO_SAMPLE_RATE))*1000 #unit: ms
         return int(desire_time_interval/raw_data_time_interval)
@@ -319,8 +323,9 @@ class Window(QtGui.QMainWindow):
         #choice = QtGui.QMessageBox.warning(self, 'Generate Txt Files',
         #                                    "Before process the following procedure, please close the Gnuradio.",
         #                                    QtGui.QMessageBox.Yes | QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Yes)
-        #if choice == QtGui.QMessageBox.Yes:
-            input_file_name = QtGui.QFileDialog.getOpenFileName(self, 'Input File')
+        input_file_name = QtGui.QFileDialog.getOpenFileName(self, 'Choose input binary file')
+        if input_file_name:
+
             # 'r' intention to file_generator
             input_file = open(input_file_name, 'r')
 
@@ -331,10 +336,10 @@ class Window(QtGui.QMainWindow):
                                                 QtGui.QMessageBox.Yes)
 
             output_file_name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
-            print output_file_name
+            print "Generate %s." % output_file_name
             numpy.savetxt(str(output_file_name), f, delimiter=' ', newline='\n', header='', footer='', comments='# ')
-        #else:
-        #    pass
+        else:
+            pass
 
     ####save the text in text window to a file
     def file_save_event(self):

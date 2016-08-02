@@ -179,7 +179,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1</value>
+      <value>5e3</value>
     </param>
   </block>
   <block>
@@ -206,7 +206,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>20</value>
+      <value>100e3</value>
     </param>
   </block>
   <block>
@@ -405,7 +405,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -452,7 +452,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>file</key>
@@ -460,7 +460,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1080, 523)</value>
+      <value>(1112, 499)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -503,7 +503,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>file</key>
@@ -546,7 +546,7 @@
     </param>
     <param>
       <key>const</key>
-      <value>10000</value>
+      <value>1e3</value>
     </param>
     <param>
       <key>affinity</key>
@@ -605,7 +605,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -652,11 +652,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(896, 547)</value>
+      <value>(936, 523)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -703,7 +703,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1565,7 +1565,7 @@
     </param>
     <param>
       <key>ant0</key>
-      <value>RX2</value>
+      <value>TX/RX</value>
     </param>
     <param>
       <key>bw0</key>
@@ -2485,7 +2485,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(168, 395)</value>
+      <value>(184, 395)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2728,7 +2728,7 @@
     </param>
     <param>
       <key>units</key>
-      <value></value>
+      <value>mW</value>
     </param>
     <param>
       <key>win_size</key>
@@ -2846,7 +2846,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(632, 523)</value>
+      <value>(448, 515)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2886,7 +2886,7 @@
     </param>
     <param>
       <key>type</key>
-      <value>float</value>
+      <value>complex</value>
     </param>
     <param>
       <key>v_offset</key>
@@ -2952,12 +2952,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_multiply_const_vxx_1</source_block_id>
-    <sink_block_id>wxgui_scopesink2_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>blocks_multiply_const_vxx_2</source_block_id>
     <sink_block_id>blocks_stream_to_vector_0_0</sink_block_id>
     <source_key>0</source_key>
@@ -2984,6 +2978,12 @@
   <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
     <sink_block_id>blocks_complex_to_mag_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>uhd_usrp_source_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
