@@ -64,6 +64,7 @@ class Power(grc_wxgui.top_block_gui):
         	y_axis_label="Counts",
         )
         self.Add(self.wxgui_scopesink2_1.win)
+	###
         self.wxgui_numbersink2_1 = numbersink2.number_sink_f(
         	self.GetWin(),
         	unit="mW",
@@ -81,6 +82,7 @@ class Power(grc_wxgui.top_block_gui):
         	show_gauge=True,
         )
         self.Add(self.wxgui_numbersink2_1.win)
+	###
         self.uhd_usrp_source_0 = uhd.usrp_source(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -93,6 +95,7 @@ class Power(grc_wxgui.top_block_gui):
         self.uhd_usrp_source_0.set_center_freq(freq, 0)
         self.uhd_usrp_source_0.set_gain(56, 0)
         self.uhd_usrp_source_0.set_antenna("TX/RX", 0)
+	###
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -105,10 +108,14 @@ class Power(grc_wxgui.top_block_gui):
         self.uhd_usrp_sink_0.set_center_freq(freq, 0)
         self.uhd_usrp_sink_0.set_gain(56, 0)
         self.uhd_usrp_sink_0.set_antenna("TX/RX", 0)
+	###
         self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((1e3, ))
-        self.blocks_complex_to_mag_1 = blocks.complex_to_mag(1)
-        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, mean_length, 1, 0)
-        self._MuteTx_check_box = forms.check_box(
+	###        
+	self.blocks_complex_to_mag_1 = blocks.complex_to_mag(1)
+	###        
+	self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, mean_length, 1, 0)
+	###        
+	self._MuteTx_check_box = forms.check_box(
         	parent=self.GetWin(),
         	value=self.MuteTx,
         	callback=self.set_MuteTx,
@@ -116,8 +123,8 @@ class Power(grc_wxgui.top_block_gui):
         	true=True,
         	false=False,
         )
-        self.Add(self._MuteTx_check_box)
-        self.Mute = blocks.mute_cc(bool(MuteTx))
+        self.Add(self._MuteTx_check_box)        
+	self.Mute = blocks.mute_cc(bool(MuteTx))
 
         ##################################################
         # Connections
