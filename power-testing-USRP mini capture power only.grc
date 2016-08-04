@@ -405,7 +405,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -484,57 +484,6 @@
     </param>
   </block>
   <block>
-    <key>blocks_file_sink</key>
-    <param>
-      <key>append</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>/home/moez/Desktop/gnu_binary_data/wTx_A_1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1080, 163)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_file_sink_0_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>unbuffered</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>vect_len</value>
-    </param>
-  </block>
-  <block>
     <key>blocks_multiply_const_vxx</key>
     <param>
       <key>alias</key>
@@ -597,7 +546,7 @@
     </param>
     <param>
       <key>const</key>
-      <value>10000</value>
+      <value>1000</value>
     </param>
     <param>
       <key>affinity</key>
@@ -605,7 +554,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -656,7 +605,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(936, 523)</value>
+      <value>(952, 523)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -688,7 +637,7 @@
     </param>
   </block>
   <block>
-    <key>blocks_stream_to_vector</key>
+    <key>blocks_sub_xx</key>
     <param>
       <key>alias</key>
       <value></value>
@@ -703,11 +652,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(856, 187)</value>
+      <value>(816, 273)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -715,7 +664,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>blocks_stream_to_vector_0_0</value>
+      <value>blocks_sub_xx_0</value>
     </param>
     <param>
       <key>type</key>
@@ -730,8 +679,8 @@
       <value>0</value>
     </param>
     <param>
-      <key>num_items</key>
-      <value>vect_len</value>
+      <key>num_inputs</key>
+      <value>2</value>
     </param>
     <param>
       <key>vlen</key>
@@ -1565,7 +1514,7 @@
     </param>
     <param>
       <key>ant0</key>
-      <value>TX/RX</value>
+      <value>RX2</value>
     </param>
     <param>
       <key>bw0</key>
@@ -1589,7 +1538,7 @@
     </param>
     <param>
       <key>gain0</key>
-      <value>56</value>
+      <value>54</value>
     </param>
     <param>
       <key>ant10</key>
@@ -2672,7 +2621,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1056, 275)</value>
+      <value>(1120, 195)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2755,98 +2704,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(648, 291)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>wxgui_scopesink2_0_0</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>t_scale</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>TxScope Plot</value>
-    </param>
-    <param>
-      <key>trig_mode</key>
-      <value>wxgui.TRIG_MODE_AUTO</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>v_offset</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>v_scale</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>win_size</key>
-      <value></value>
-    </param>
-    <param>
-      <key>xy_mode</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>y_axis_label</key>
-      <value>Counts</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_scopesink2</key>
-    <param>
-      <key>ac_couple</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
       <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 515)</value>
+      <value>(496, 547)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2941,25 +2803,13 @@
   </connection>
   <connection>
     <source_block_id>blocks_multiply_const_vxx_1</source_block_id>
-    <sink_block_id>blocks_stream_to_vector_0</sink_block_id>
+    <sink_block_id>blocks_sub_xx_0</sink_block_id>
     <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_multiply_const_vxx_1</source_block_id>
-    <sink_block_id>wxgui_numbersink2_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
+    <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_multiply_const_vxx_2</source_block_id>
-    <sink_block_id>blocks_stream_to_vector_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_multiply_const_vxx_2</source_block_id>
-    <sink_block_id>wxgui_scopesink2_0_0</sink_block_id>
+    <sink_block_id>blocks_sub_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -2970,8 +2820,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_stream_to_vector_0_0</source_block_id>
-    <sink_block_id>blocks_file_sink_0_0</sink_block_id>
+    <source_block_id>blocks_sub_xx_0</source_block_id>
+    <sink_block_id>blocks_stream_to_vector_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_sub_xx_0</source_block_id>
+    <sink_block_id>wxgui_numbersink2_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

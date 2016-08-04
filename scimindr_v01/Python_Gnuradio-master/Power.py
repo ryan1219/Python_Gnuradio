@@ -1,8 +1,9 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Power
-# Generated: Wed Aug  3 13:30:34 2016
+# Generated: Thu Aug  4 13:59:21 2016
 ##################################################
 
 if __name__ == '__main__':
@@ -36,8 +37,6 @@ class Power(grc_wxgui.top_block_gui):
 
     def __init__(self):
         grc_wxgui.top_block_gui.__init__(self, title="Power")
-        _icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
-        self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 
         ##################################################
         # Variables
@@ -93,7 +92,7 @@ class Power(grc_wxgui.top_block_gui):
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
         self.uhd_usrp_source_0.set_center_freq(freq, 0)
         self.uhd_usrp_source_0.set_gain(62, 0)
-        self.uhd_usrp_source_0.set_antenna("TX/RX", 0)
+        self.uhd_usrp_source_0.set_antenna("RX2", 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -110,7 +109,7 @@ class Power(grc_wxgui.top_block_gui):
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_float*1, vect_len)
         self.blocks_multiply_const_vxx_2 = blocks.multiply_const_vff((1000, ))
         self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((1e3, ))
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vect_len, "/home/syt/Desktop/Bourque_Lab3/binary_data/rx", False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vect_len, "/home/moez/Python_Gnuradio/scimindr_v01/binary_data/rx", False)
         self.blocks_file_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_1_0 = blocks.complex_to_mag(1)
         self.blocks_complex_to_mag_1 = blocks.complex_to_mag(1)
@@ -142,7 +141,6 @@ class Power(grc_wxgui.top_block_gui):
         self.connect((self.uhd_usrp_source_0, 0), (self.blocks_complex_to_mag_1, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.wxgui_scopesink2_1, 0))    
 
-
     def get_vect_len(self):
         return self.vect_len
 
@@ -156,8 +154,8 @@ class Power(grc_wxgui.top_block_gui):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
         self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
-        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
         self.wxgui_scopesink2_1.set_sample_rate(self.samp_rate)
+        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
 
     def get_mean_length(self):
         return self.mean_length
@@ -184,9 +182,12 @@ class Power(grc_wxgui.top_block_gui):
         self.Mute.set_mute(bool(self.MuteTx))
 
 
-if __name__ == '__main__':
-    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    (options, args) = parser.parse_args()
-    tb = Power()
+def main(top_block_cls=Power, options=None):
+
+    tb = top_block_cls()
     tb.Start(True)
     tb.Wait()
+
+
+if __name__ == '__main__':
+    main()
