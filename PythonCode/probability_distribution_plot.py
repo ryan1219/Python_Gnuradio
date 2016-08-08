@@ -10,10 +10,10 @@ def iround(x):
 
 def main():
 
-    file_tup = ('287_2',)
+    file_tup = ('solv_3',)
     color_tup = ('r','g','b','c','m','y','k','w')    
-    file_header = "C:\Users\yan.ren\Desktop\exp_8_5\\"
-    plot_title = "5.8GHz_100kHz Sample Rate_5kHz Frequency_solv_3"
+    file_header = "C:\Users\yan.ren\Desktop\exp_8_8\\2.4G\\"
+    plot_title = "2.4GHz_100kHz Sample Rate_5kHz Frequency_solv_3"
     x_lable = "Power Reading"
     y_lable = "Probability"
     
