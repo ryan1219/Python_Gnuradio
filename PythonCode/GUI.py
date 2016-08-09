@@ -40,13 +40,18 @@ class Receiver(QObject):
 # An example QObject (to be run in a QThread) which outputs information with print
 class File_Reading_Save(QThread):
 
-    def __init__(self, inputFilePath, outputFilePath, sampel_size, time_interval):
+    def __init__(self, inputFilePath, outputFilePath, sampel_size, time_interval, l1):
         QThread.__init__(self)
         self.input_file = inputFilePath
         self.output_file = outputFilePath
         self.QUEUE_SIZE = sampel_size
         self.time_interval = time_interval #unit ms
         self._isRunning = True
+
+        self.analysis_flag = False
+        self.starting_index = 0
+        self.l1 = l1
+        self.storage = []
 
     # return a generator of a file
     def file_generator(self, thefile):
@@ -80,7 +85,7 @@ class File_Reading_Save(QThread):
         sum = 0.0
         sampleCount = 0
         printerCount = 1
-        timmer = 0.0 #unit: s
+        timmer = 0.0 #unit:s
 
         for data in fileGenerator:
 
@@ -97,8 +102,9 @@ class File_Reading_Save(QThread):
 
                 text = "%.3f    %.2f\n" % (timmer, sum / self.QUEUE_SIZE)
                 self.output_file.write(text)
-
+           
                 if printerCount == 1001:
+                    self.analysis(sum)
                     print text
                     printerCount = 1
 
@@ -110,6 +116,28 @@ class File_Reading_Save(QThread):
     def stop(self):
         self._isRunning = False
 
+    def analysis(self, data):
+        #check if tup is empty
+        if(len(self.storage)> 0:
+           
+           if(self.analysis_flag == True):
+               #check if the increase is reaching the stable
+               if(abs(self.storage[len(self.storage)-1]-data) <= 5):
+                   #when increasing is stable, check peek belongs to which category
+                   if(abs(self.storage[self.starting_index]-data) > 200):
+                       self.l1.setText("solv_272_303")
+                       self.analysis_flag = False
+                   elif(abs(self.storage[self.starting_index]-data) <= 200):
+                       self.l1.setText("285-295")
+                       self.analysis_flag = False
+           #detect the increase
+           elif(self.storage[len(self.storage)-1]-data >= 20):
+               self.analysis_flag = True
+               self.starting_index = len(self.storage) - 1
+
+        self.storage.append(data)
+
+        
 class Settings(QtGui.QWidget):
 
     def __init__(self, parent = None):
@@ -159,6 +187,7 @@ class Window(QtGui.QMainWindow):
         #set window icon, not work in ubuntu, may work in windows
         #self.setWindowIcon(QtGui.QIcon("biomindr_logo.png"))
 
+        ####
         #### about tab
         about_m = QtGui.QAction("&About", self)
         about_m.setShortcut("Ctrl+A")
@@ -182,7 +211,7 @@ class Window(QtGui.QMainWindow):
         file_menu.addAction(about_m)
         ######
 
-        ######Text indow
+        ######Text window
         self.text_window = QtGui.QTextEdit()
         self.setCentralWidget(self.text_window)
         ######
@@ -202,6 +231,12 @@ class Window(QtGui.QMainWindow):
         # btn.resize(btn.sizeHint())
         # btn.move(410, 270)
 
+        #### label
+        self.l1 = QtGui.QLabel("", self)
+        #self.l1.setAlignment(QtCore.Qt.AlignBottom)
+        self.l1.setText("Sample Type")
+        self.l1.move(900, 575)
+        
         ######tool bar
         ##logo
         comp_logo = QtGui.QAction(QtGui.QIcon('biomindr_logo.png'), 'Company Info', self)
@@ -280,7 +315,7 @@ class Window(QtGui.QMainWindow):
             #print ("Calculated sampling rate is %i") % sample_number
 
             self.file_reading_thread = QThread()
-            self.read = File_Reading_Save(input_file_name, self.setting_dialog_window.le1.text(), sample_number, time_interval)
+            self.read = File_Reading_Save(input_file_name, self.setting_dialog_window.le1.text(), sample_number, time_interval, self.l1)
             self.read.moveToThread(self.file_reading_thread)
             self.file_reading_thread.started.connect(self.read.run)
             self.file_reading_thread.finished.connect(self.read.stop)
