@@ -117,27 +117,28 @@ class File_Reading_Save(QThread):
         self._isRunning = False
 
     def analysis(self, data):
-        #check if tup is empty
-        if(len(self.storage)> 0:
-           
-           if(self.analysis_flag == True):
-               #check if the increase is reaching the stable
-               if(abs(self.storage[len(self.storage)-1]-data) <= 5):
-                   #when increasing is stable, check peek belongs to which category
-                   if(abs(self.storage[self.starting_index]-data) > 200):
-                       self.l1.setText("solv_272_303")
-                       self.analysis_flag = False
-                   elif(abs(self.storage[self.starting_index]-data) <= 200):
-                       self.l1.setText("285-295")
-                       self.analysis_flag = False
-           #detect the increase
-           elif(self.storage[len(self.storage)-1]-data >= 20):
-               self.analysis_flag = True
-               self.starting_index = len(self.storage) - 1
-
+        # check if tup is empty
+        if (len(self.storage) > 0):
+            if (self.analysis_flag == True):
+                # check if the increase is reaching the stable
+                if (abs(self.storage[len(self.storage) - 1] - data) <= 10):
+                    # when increasing is stable, check peek belongs to which category
+                    if (abs(self.storage[self.starting_index] - data) > 100):
+                        self.l1.setText("solv_272_303")
+                        self.analysis_flag = False
+                    else:
+                        self.l1.setText("285-295")
+                        self.analysis_flag = False
+            # detect the increase
+            elif (self.storage[len(self.storage) - 1] - data >= 10):
+                self.analysis_flag = True
+                self.starting_index = len(self.storage) - 1
+            else:
+                # self.analysis_flag = False
+                self.l1.setText("Sample Type")
         self.storage.append(data)
 
-        
+
 class Settings(QtGui.QWidget):
 
     def __init__(self, parent = None):
