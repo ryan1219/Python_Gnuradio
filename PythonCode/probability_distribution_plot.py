@@ -10,10 +10,10 @@ def iround(x):
 
 def main():
 
-    file_tup = ('solv_3',)
+    file_tup = ('DI_water_3',)
     color_tup = ('r','g','b','c','m','y','k','w')    
-    file_header = "C:\Users\yan.ren\Desktop\exp_8_8\\2.4G\\"
-    plot_title = "2.4GHz_100kHz Sample Rate_5kHz Frequency_solv_3"
+    file_header = "C:\Users\yan.ren\Desktop\exp_8_22_YR\\"
+    plot_title = "5.8GHz_100kHz Sample Rate_5kHz Frequency"
     x_lable = "Power Reading"
     y_lable = "Probability"
     
@@ -27,7 +27,8 @@ def main():
         print inputFilePath
         content = [line.rstrip('\n') for line in open(inputFilePath)]
         total_data = float(len(content))
-        
+
+        ##choose how many lines of data going to be used in plot 
         for y in xrange(0, len(content)):
             temp = content[y].split()
             time_data.append(temp[0])
@@ -62,7 +63,7 @@ def main():
             
         y_axis = [ k/total_data for k in y_axis]
 
-        pl.plot(x_axis, y_axis, color = color_tup[x%len(color_tup)] , linestyle= 'solid', marker='o', label = file_tup[x])
+        pl.plot(x_axis, y_axis, color = color_tup[x%len(color_tup)] , markeredgecolor = 'none', linestyle= 'solid', marker='o', label = file_tup[x])
         
     pl.title(plot_title)
     pl.xlabel(x_lable)

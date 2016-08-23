@@ -28,7 +28,8 @@ def main():
         print inputFilePath
         content = [line.rstrip('\n') for line in open(inputFilePath)]
         total_data = float(len(content))
-
+        
+    	##choose how many lines of data going to be used in plot
         for y in xrange(0, len(content)):
             temp = content[y].split()
             time_data.append(temp[0])
@@ -40,7 +41,7 @@ def main():
         ##release this comment if want to round to integer
         # power_data = [iround(i) for i in power_data]
 
-        pl.plot(time_data, power_data, color=color_tup[x % len(color_tup)], linestyle='solid', marker='o', label=file_tup[x])
+        pl.plot(time_data, power_data, color=color_tup[x % len(color_tup)],markeredgecolor = 'none', linestyle='solid', marker='o', label=file_tup[x])
 
     pl.title(plot_title)
     pl.xlabel(x_lable)
