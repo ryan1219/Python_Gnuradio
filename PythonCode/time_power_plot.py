@@ -11,10 +11,10 @@ def iround(x):
 
 def main():
     
-    file_tup = ('serial_3',)
+    file_tup = ('human_test_8_24',)
     color_tup = ('r', 'g', 'b', 'c', 'm', 'y', 'k', 'w')
-    file_header = "C:\Users\yan.ren\Desktop\exp_8_10\\5.8G_NaCl_2\\"
-    plot_title = "5.8GHz_100kHz Sample Rate_5kHz Frequency_serial_3"
+    file_header = "C:\Users\yan.ren\Desktop\human_test_8_24\\"
+    plot_title = "5.8GHz_100kHz Sample Rate_5kHz Frequency"
     x_lable = "Time(s)"
     y_lable = "Power Reading"
 
