@@ -287,7 +287,7 @@
     <key>analog_sig_source_x</key>
     <param>
       <key>amp</key>
-      <value>1</value>
+      <value>60</value>
     </param>
     <param>
       <key>alias</key>
@@ -456,7 +456,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>/home/moez/Python_Gnuradio/scimindr_v01/binary_data/rx</value>
+      <value>/home/moez/Desktop/rx</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1538,7 +1538,7 @@
     </param>
     <param>
       <key>gain0</key>
-      <value>62</value>
+      <value>60</value>
     </param>
     <param>
       <key>ant10</key>

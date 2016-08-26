@@ -302,7 +302,7 @@ class Window(QtGui.QMainWindow):
 
         #choose input binary file path
         #input_file_name = QtGui.QFileDialog.getOpenFileName(self, 'Open File')
-        input_file_name = "/home/moez/Desktop/gnu_binary_data/wRx_A_1"
+        input_file_name = "/home/moez/Desktop/rx"
 
         if not self.setting_dialog_window.le1.text():
             print "Cannot start. Empty output file path, please check settings"

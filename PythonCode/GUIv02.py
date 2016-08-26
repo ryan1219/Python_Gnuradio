@@ -11,6 +11,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import threading
 
 # The new Stream Object which replaces the default stream associated with sys.stdout
 # This object just puts data in a queue
@@ -55,15 +56,15 @@ class File_Reading_Save(QThread):
         self.starting_index = 0
         self.l1 = l1
         self.storage = []
-        self.x_axis = []
+        self.buffer = []
         self.y_axis = []
 
         self.fig = plt.figure()
         self.ax1 = self.fig.add_subplot(1, 1, 1)
         self.lock = False
 
-        ani = animation.FuncAnimation(self.fig, self.animate, interval=1000)
-        plt.show()
+        t = threading.Thread(target=self.animate, args=(self.buffer, self.y_axis))
+        t.start()
 
     # return a generator of a file
     def file_generator(self, thefile):
@@ -117,8 +118,8 @@ class File_Reading_Save(QThread):
                 self.output_file.write(text)
 
                 #fill the list for plotting
-                if(self.lock == False):
-                    self.x_axis.append(sum / self.QUEUE_SIZE)
+                if(not self.lock):
+                    self.buffer.append(sum / self.QUEUE_SIZE)
 
                 if printerCount == 1001:
                     #self.analysis(sum)
@@ -133,18 +134,20 @@ class File_Reading_Save(QThread):
     def stop(self):
         self._isRunning = False
 
-    def animate(self,i):
+    def animate(self,x,y):
+
         total_data = 1000
-        while(len(self.x_axis)< total_data):
+        while(len(self.buffer)< total_data):
             pass
 
         self.lock = True
-        power_data = sorted(self.x_axis)  # sorted
+        power_data = sorted(self.buffer)  # sorted
 
+        x_axis = []
         ######
         i = 0
         while (i < len(power_data)):
-            self.x_axis.append(power_data[i])
+            x_axis.append(power_data[i])
             self.y_axis.append(1)
 
             j = i + 1
@@ -156,15 +159,16 @@ class File_Reading_Save(QThread):
                 j = j + 1
 
             i = j
-
-        y_axis = [k / len(self.y_axis) for k in self.y_axis]
+        self.y_axis = [k / len(self.y_axis) for k in self.y_axis]
+        ######
 
         self.ax1.clear()
-        self.ax1.plot(self.x_axis, self.y_axis)
+        self.ax1.plot(x_axis, self.y_axis)
 
-        self.x_axis = []
+        self.buffer = []
         self.y_axis = []
         self.lock = False
+        plt.show()
 
     def analysis(self, data):
         # check if tup is empty
@@ -350,7 +354,7 @@ class Window(QtGui.QMainWindow):
 
         # choose input binary file path
         # input_file_name = QtGui.QFileDialog.getOpenFileName(self, 'Open File')
-        input_file_name = "/home/moez/Desktop/gnu_binary_data/wRx_A_1"
+        input_file_name = "/home/moez/Desktop/rx"
 
         if not self.setting_dialog_window.le1.text():
             print "Cannot start. Empty output file path, please check settings"
@@ -467,7 +471,6 @@ def main():
     my_receiver.moveToThread(thread)
     thread.started.connect(my_receiver.run)
     thread.start()
-
     sys.exit(app.exec_())
 
 

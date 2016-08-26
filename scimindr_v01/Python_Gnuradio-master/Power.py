@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Power
-# Generated: Thu Aug  4 13:59:21 2016
+# Generated: Fri Aug 26 12:19:21 2016
 ##################################################
 
 if __name__ == '__main__':
@@ -91,8 +91,8 @@ class Power(grc_wxgui.top_block_gui):
         self.uhd_usrp_source_0.set_subdev_spec("A:B", 0)
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
         self.uhd_usrp_source_0.set_center_freq(freq, 0)
-        self.uhd_usrp_source_0.set_gain(62, 0)
-        self.uhd_usrp_source_0.set_antenna("RX2", 0)
+        self.uhd_usrp_source_0.set_gain(60, 0)
+        self.uhd_usrp_source_0.set_antenna("TX/RX", 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -109,11 +109,11 @@ class Power(grc_wxgui.top_block_gui):
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_float*1, vect_len)
         self.blocks_multiply_const_vxx_2 = blocks.multiply_const_vff((1000, ))
         self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((1e3, ))
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vect_len, "/home/moez/Python_Gnuradio/scimindr_v01/binary_data/rx", False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vect_len, "/home/moez/Desktop/rx", False)
         self.blocks_file_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_1_0 = blocks.complex_to_mag(1)
         self.blocks_complex_to_mag_1 = blocks.complex_to_mag(1)
-        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, mean_length, 1, 0)
+        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, mean_length, 60, 0)
         self._MuteTx_check_box = forms.check_box(
         	parent=self.GetWin(),
         	value=self.MuteTx,
@@ -152,10 +152,10 @@ class Power(grc_wxgui.top_block_gui):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
         self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
-        self.wxgui_scopesink2_1.set_sample_rate(self.samp_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
+        self.wxgui_scopesink2_1.set_sample_rate(self.samp_rate)
+        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
 
     def get_mean_length(self):
         return self.mean_length
