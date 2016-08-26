@@ -9,7 +9,8 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 # The new Stream Object which replaces the default stream associated with sys.stdout
 # This object just puts data in a queue
@@ -54,6 +55,15 @@ class File_Reading_Save(QThread):
         self.starting_index = 0
         self.l1 = l1
         self.storage = []
+        self.x_axis = []
+        self.y_axis = []
+
+        self.fig = plt.figure()
+        self.ax1 = self.fig.add_subplot(1, 1, 1)
+        self.lock = False
+
+        ani = animation.FuncAnimation(self.fig, self.animate, interval=1000)
+        plt.show()
 
     # return a generator of a file
     def file_generator(self, thefile):
@@ -96,6 +106,7 @@ class File_Reading_Save(QThread):
 
             data_float = struct.unpack('f', data)
 
+
             if sampleCount < self.QUEUE_SIZE:
                 sampleCount = sampleCount + 1
                 sum = sum + data_float[0]
@@ -105,8 +116,12 @@ class File_Reading_Save(QThread):
                 text = "%.3f    %.2f\n" % (timmer, sum / self.QUEUE_SIZE)
                 self.output_file.write(text)
 
+                #fill the list for plotting
+                if(self.lock == False):
+                    self.x_axis.append(sum / self.QUEUE_SIZE)
+
                 if printerCount == 1001:
-                    self.analysis(sum)
+                    #self.analysis(sum)
                     print text
                     printerCount = 1
 
@@ -117,6 +132,39 @@ class File_Reading_Save(QThread):
 
     def stop(self):
         self._isRunning = False
+
+    def animate(self,i):
+        total_data = 1000
+        while(len(self.x_axis)< total_data):
+            pass
+
+        self.lock = True
+        power_data = sorted(self.x_axis)  # sorted
+
+        ######
+        i = 0
+        while (i < len(power_data)):
+            self.x_axis.append(power_data[i])
+            self.y_axis.append(1)
+
+            j = i + 1
+            while (j < len(power_data)):
+                if power_data[i] == power_data[j]:
+                    self.y_axis[len(self.y_axis) - 1] = self.y_axis[len(self.y_axis) - 1] + 1
+                else:
+                    break
+                j = j + 1
+
+            i = j
+
+        y_axis = [k / len(self.y_axis) for k in self.y_axis]
+
+        self.ax1.clear()
+        self.ax1.plot(self.x_axis, self.y_axis)
+
+        self.x_axis = []
+        self.y_axis = []
+        self.lock = False
 
     def analysis(self, data):
         # check if tup is empty
