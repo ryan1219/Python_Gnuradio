@@ -3,6 +3,17 @@ import scipy.stats as stats
 import pylab as pl
 import sys
 
+# This code is for plotting the time vs power, the input data file should follow the below format.
+# 0.000    115.97
+# 0.001    115.78
+# 0.002    115.79
+# 0.003    115.72
+# 0.004    116.26
+# 0.005    116.00
+# 0.006    115.97
+# 0.007    115.96
+# 0.008    115.80
+# 0.009    115.84
 
 ###this function is for rounding up float point number to integer
 def iround(x):
@@ -10,10 +21,12 @@ def iround(x):
     return int(y) + (y > 0)
 
 def main():
-    
-    file_tup = ('human_test_8_24',)
+
+    #Graph label and input data, should be checked each time before running
+
+    file_tup = ('human_test_8_24',) #file name, support multiple file for plotting multiple lines in same graph
     color_tup = ('r', 'g', 'b', 'c', 'm', 'y', 'k', 'w')
-    file_header = "C:\Users\yan.ren\Desktop\human_test_8_24\\"
+    file_header = "C:\Users\yan.ren\Desktop\human_test_8_24\\" #file path
     plot_title = "5.8GHz_100kHz Sample Rate_5kHz Frequency"
     x_lable = "Time(s)"
     y_lable = "Power Reading"

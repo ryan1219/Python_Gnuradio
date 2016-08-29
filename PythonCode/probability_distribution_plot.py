@@ -3,6 +3,18 @@ import scipy.stats as stats
 import pylab as pl
 import sys
 
+# This code is for plotting the probability density vs power, the input data file should follow the below format.
+# 0.000    115.97
+# 0.001    115.78
+# 0.002    115.79
+# 0.003    115.72
+# 0.004    116.26
+# 0.005    116.00
+# 0.006    115.97
+# 0.007    115.96
+# 0.008    115.80
+# 0.009    115.84
+
 ###this function is for rounding up float point number to integer
 def iround(x):
     y = round(x) - .5
@@ -10,7 +22,7 @@ def iround(x):
 
 def main():
 
-    file_tup = ('',)
+    file_tup = ('human_test_8_24',)
     color_tup = ('r','g','b','c','m','y','k','w')    
     file_header = "/home/moez/Desktop/test"
     plot_title = "5.8GHz_100kHz Sample Rate_5kHz Frequency"
