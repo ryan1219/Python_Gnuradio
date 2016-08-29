@@ -28,4 +28,19 @@ GUI.py is the second release for hospital. It generating the data in below forma
 0.026    116.12
 0.027    116.18
 
+First released for hospital is in scimindr folder. It generating the data in below format
+115.97
+115.78
+115.79
+115.72
+116.26
+116.00
+115.97
+115.96
+115.80
+115.84
+115.87
+116.09
+115.96
+116.27
 GUIv02 has the live probability density plot feature. 
