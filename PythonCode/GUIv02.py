@@ -11,7 +11,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import threading
+import time
+import thread
 
 # The new Stream Object which replaces the default stream associated with sys.stdout
 # This object just puts data in a queue
@@ -41,7 +42,6 @@ class Receiver(QObject):
             text = self.queue.get()
             self.mysignal.emit(text)
 
-
 # An example QObject (to be run in a QThread) which outputs information with print
 class File_Reading_Save(QThread):
     def __init__(self, inputFilePath, outputFilePath, sampel_size, time_interval, l1):
@@ -55,16 +55,6 @@ class File_Reading_Save(QThread):
         self.analysis_flag = False
         self.starting_index = 0
         self.l1 = l1
-        self.storage = []
-        self.buffer = []
-        self.y_axis = []
-
-        self.fig = plt.figure()
-        self.ax1 = self.fig.add_subplot(1, 1, 1)
-        self.lock = False
-
-        t = threading.Thread(target=self.animate, args=(self.buffer, self.y_axis))
-        t.start()
 
     # return a generator of a file
     def file_generator(self, thefile):
@@ -117,10 +107,6 @@ class File_Reading_Save(QThread):
                 text = "%.3f    %.2f\n" % (timmer, sum / self.QUEUE_SIZE)
                 self.output_file.write(text)
 
-                #fill the list for plotting
-                if(not self.lock):
-                    self.buffer.append(sum / self.QUEUE_SIZE)
-
                 if printerCount == 1001:
                     #self.analysis(sum)
                     print text
@@ -133,42 +119,6 @@ class File_Reading_Save(QThread):
 
     def stop(self):
         self._isRunning = False
-
-    def animate(self,x,y):
-
-        total_data = 1000
-        while(len(self.buffer)< total_data):
-            pass
-
-        self.lock = True
-        power_data = sorted(self.buffer)  # sorted
-
-        x_axis = []
-        ######
-        i = 0
-        while (i < len(power_data)):
-            x_axis.append(power_data[i])
-            self.y_axis.append(1)
-
-            j = i + 1
-            while (j < len(power_data)):
-                if power_data[i] == power_data[j]:
-                    self.y_axis[len(self.y_axis) - 1] = self.y_axis[len(self.y_axis) - 1] + 1
-                else:
-                    break
-                j = j + 1
-
-            i = j
-        self.y_axis = [k / len(self.y_axis) for k in self.y_axis]
-        ######
-
-        self.ax1.clear()
-        self.ax1.plot(x_axis, self.y_axis)
-
-        self.buffer = []
-        self.y_axis = []
-        self.lock = False
-        plt.show()
 
     def analysis(self, data):
         # check if tup is empty
@@ -456,6 +406,113 @@ class Window(QtGui.QMainWindow):
         else:
             pass
 
+def plot(threadName,id):
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(1, 1, 1)
+
+    def tail(f, lines=20):
+        total_lines_wanted = lines
+
+        BLOCK_SIZE = 1024
+        f.seek(0, 2)
+        block_end_byte = f.tell()
+        lines_to_go = total_lines_wanted
+        block_number = -1
+        blocks = []  # blocks of size BLOCK_SIZE, in reverse order starting
+        # from the end of the file
+        while lines_to_go > 0 and block_end_byte > 0:
+            if (block_end_byte - BLOCK_SIZE > 0):
+                # read the last block we haven't yet read
+                f.seek(block_number * BLOCK_SIZE, 2)
+                blocks.append(f.read(BLOCK_SIZE))
+            else:
+                # file too small, start from begining
+                f.seek(0, 0)
+                # only read what was not read
+                blocks.append(f.read(block_end_byte))
+            lines_found = blocks[-1].count('\n')
+            lines_to_go -= lines_found
+            block_end_byte -= BLOCK_SIZE
+            block_number -= 1
+        all_read_text = ''.join(reversed(blocks))
+        return '\n'.join(all_read_text.splitlines()[-total_lines_wanted:])
+
+    def iround(x):
+        y = round(x) - .5
+        return int(y) + (y > 0)
+
+    def animate(i):
+        #pullData = open("/home/moez/Desktop/test.txt", "r").read()
+        #dataArray = pullData.split('\n')
+        # xar = []
+        # yar = []
+        #
+        # dataArray.pop()
+        #
+        # for eachLine in dataArray:
+        #     if len(eachLine) > 1:
+        #         x, y = eachLine.split()
+        #         xar.append(float(x))
+        #         yar.append(float(y))
+        # ax1.clear()
+        # ax1.plot(xar, yar, color='r', markeredgecolor = 'none', linestyle='solid', marker='o')
+
+        pullData = open("/home/moez/Desktop/data.txt", "r").read()
+        content = pullData.split('\n')
+
+        #content = raw_data[-10:0]
+        #content = content.pop()
+        #print content[0]
+        #print content[1]
+
+        total_data = float(len(content)-1)
+
+        time_data = []
+        power_data = []
+
+        ##choose how many lines of data going to be used in plot
+        for y in xrange(0, len(content)-1):
+            temp = content[y].split()
+            #print temp[1]
+            time_data.append(temp[0])
+            power_data.append(temp[1])
+
+        power_data = [float(i) for i in power_data]
+
+        ##release this comment if want to round to integer
+        power_data = [iround(i) for i in power_data]
+
+        power_data = sorted(power_data)  # sorted
+
+        ######
+        x_axis = []
+        y_axis = []
+
+        i = 0
+        while (i < len(power_data)):
+
+            x_axis.append(power_data[i])
+            y_axis.append(1)
+
+            j = i + 1
+            while (j < len(power_data)):
+                if power_data[i] == power_data[j]:
+                    y_axis[len(y_axis) - 1] = y_axis[len(y_axis) - 1] + 1
+                else:
+                    break
+                j = j + 1
+
+            i = j
+
+        y_axis = [k / total_data for k in y_axis]
+
+        plt.clf()
+        plt.plot(x_axis, y_axis, color='r', markeredgecolor='none', linestyle='solid',
+                marker='o', label='plot')
+
+    ani = animation.FuncAnimation(fig, animate, interval=2000)
+    plt.show()
 
 def main():
     queue = Queue()
@@ -465,12 +522,15 @@ def main():
     GUI = Window()
 
     # Create file_reading_thread that will listen on the other end of the queue, and send the text to the textedit in our application
-    thread = QThread()
+    newthread = QThread()
     my_receiver = Receiver(queue)
     my_receiver.mysignal.connect(GUI.append_text)
-    my_receiver.moveToThread(thread)
-    thread.started.connect(my_receiver.run)
-    thread.start()
+    my_receiver.moveToThread(newthread)
+    newthread.started.connect(my_receiver.run)
+    newthread.start()
+
+    thread.start_new_thread(plot, ("Thread-1","2"))
+
     sys.exit(app.exec_())
 
 

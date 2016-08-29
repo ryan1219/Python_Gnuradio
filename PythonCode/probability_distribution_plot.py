@@ -10,9 +10,9 @@ def iround(x):
 
 def main():
 
-    file_tup = ('DI_water_3',)
+    file_tup = ('',)
     color_tup = ('r','g','b','c','m','y','k','w')    
-    file_header = "C:\Users\yan.ren\Desktop\exp_8_22_YR\\"
+    file_header = "/home/moez/Desktop/test"
     plot_title = "5.8GHz_100kHz Sample Rate_5kHz Frequency"
     x_lable = "Power Reading"
     y_lable = "Probability"
