@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Power
-# Generated: Wed Aug 31 12:38:39 2016
+# Generated: Wed Aug 31 16:20:46 2016
 ##################################################
 
 if __name__ == '__main__':
@@ -91,7 +91,7 @@ class Power(grc_wxgui.top_block_gui):
         self.uhd_usrp_source_0.set_subdev_spec("A:B", 0)
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
         self.uhd_usrp_source_0.set_center_freq(freq, 0)
-        self.uhd_usrp_source_0.set_gain(64, 0)
+        self.uhd_usrp_source_0.set_gain(60, 0)
         self.uhd_usrp_source_0.set_antenna("TX/RX", 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
         	",".join(("", "")),
@@ -154,8 +154,8 @@ class Power(grc_wxgui.top_block_gui):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
         self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
-        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
         self.wxgui_scopesink2_1.set_sample_rate(self.samp_rate)
+        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
 
     def get_mean_length(self):
         return self.mean_length

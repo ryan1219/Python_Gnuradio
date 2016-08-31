@@ -434,7 +434,7 @@ def plot(threadName,id, input_file):
         ax1.title.set_text('pdf_plot')
         ax2.title.set_text('time_power_plot')
 
-    ani = animation.FuncAnimation(fig, animate, interval=1000)
+    ani = animation.FuncAnimation(fig, animate, interval=500)
 
     plt.show()
 
