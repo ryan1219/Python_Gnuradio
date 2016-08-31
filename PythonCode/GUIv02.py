@@ -325,6 +325,10 @@ class Window(QtGui.QMainWindow):
             self.file_reading_thread.finished.connect(self.read.stop)
             self.file_reading_thread.start()
 
+            #start plotting thread
+            thread.start_new_thread(plot, ("Thread-1", "1", self.setting_dialog_window.le1.text()))
+
+
     def sample_number_cal(self, desire_time_interval):
 
         GNURADIO_SAMPLE_RATE = 100000  # unit: samples/s
@@ -406,37 +410,11 @@ class Window(QtGui.QMainWindow):
         else:
             pass
 
-def plot(threadName,id):
+def plot(threadName,id, input_file):
 
     fig = plt.figure()
-    ax1 = fig.add_subplot(1, 1, 1)
-
-    def tail(f, lines=20):
-        total_lines_wanted = lines
-
-        BLOCK_SIZE = 1024
-        f.seek(0, 2)
-        block_end_byte = f.tell()
-        lines_to_go = total_lines_wanted
-        block_number = -1
-        blocks = []  # blocks of size BLOCK_SIZE, in reverse order starting
-        # from the end of the file
-        while lines_to_go > 0 and block_end_byte > 0:
-            if (block_end_byte - BLOCK_SIZE > 0):
-                # read the last block we haven't yet read
-                f.seek(block_number * BLOCK_SIZE, 2)
-                blocks.append(f.read(BLOCK_SIZE))
-            else:
-                # file too small, start from begining
-                f.seek(0, 0)
-                # only read what was not read
-                blocks.append(f.read(block_end_byte))
-            lines_found = blocks[-1].count('\n')
-            lines_to_go -= lines_found
-            block_end_byte -= BLOCK_SIZE
-            block_number -= 1
-        all_read_text = ''.join(reversed(blocks))
-        return '\n'.join(all_read_text.splitlines()[-total_lines_wanted:])
+    ax1 = fig.add_subplot(211)
+    ax2 = fig.add_subplot(212)
 
     def iround(x):
         y = round(x) - .5
@@ -458,13 +436,8 @@ def plot(threadName,id):
         # ax1.clear()
         # ax1.plot(xar, yar, color='r', markeredgecolor = 'none', linestyle='solid', marker='o')
 
-        pullData = open("/home/moez/Desktop/data.txt", "r").read()
+        pullData = open(input_file, "r").read()
         content = pullData.split('\n')
-
-        #content = raw_data[-10:0]
-        #content = content.pop()
-        #print content[0]
-        #print content[1]
 
         total_data = float(len(content)-1)
 
@@ -474,21 +447,26 @@ def plot(threadName,id):
         ##choose how many lines of data going to be used in plot
         for y in xrange(0, len(content)-1):
             temp = content[y].split()
-            #print temp[1]
             time_data.append(temp[0])
             power_data.append(temp[1])
 
         power_data = [float(i) for i in power_data]
+        time_data = [float(i) for i in time_data]
 
         ##release this comment if want to round to integer
-        power_data = [iround(i) for i in power_data]
+        # power_data = [iround(i) for i in power_data]
 
+        ##for time vs power plot
+        ax2.clear()
+        ax2.plot(time_data, power_data, color='r', markeredgecolor='none', linestyle='solid',
+                 marker='o', label="time_power_plot")
+
+        ##for pdf plot
         power_data = sorted(power_data)  # sorted
-
-        ######
         x_axis = []
         y_axis = []
 
+        ##calculate pdf
         i = 0
         while (i < len(power_data)):
 
@@ -506,12 +484,16 @@ def plot(threadName,id):
             i = j
 
         y_axis = [k / total_data for k in y_axis]
+        ##
+        ax1.clear()
+        ax1.plot(x_axis, y_axis, color='r', markeredgecolor='none', linestyle='solid',
+                marker='o', label='pdf_plot')
 
-        plt.clf()
-        plt.plot(x_axis, y_axis, color='r', markeredgecolor='none', linestyle='solid',
-                marker='o', label='plot')
+        ax1.title.set_text('pdf_plot')
+        ax2.title.set_text('time_power_plot')
 
-    ani = animation.FuncAnimation(fig, animate, interval=2000)
+    ani = animation.FuncAnimation(fig, animate, interval=1000)
+
     plt.show()
 
 def main():
@@ -529,10 +511,7 @@ def main():
     newthread.started.connect(my_receiver.run)
     newthread.start()
 
-    thread.start_new_thread(plot, ("Thread-1","2"))
-
     sys.exit(app.exec_())
-
 
 if __name__ == '__main__':
     main()
