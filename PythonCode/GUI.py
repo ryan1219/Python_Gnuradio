@@ -104,7 +104,6 @@ class File_Reading_Save(QThread):
                 self.output_file.write(text)
            
                 if printerCount == 1001:
-                    self.analysis(sum)
                     print text
                     printerCount = 1
 
@@ -115,29 +114,6 @@ class File_Reading_Save(QThread):
 
     def stop(self):
         self._isRunning = False
-
-    def analysis(self, data):
-        # check if tup is empty
-        if (len(self.storage) > 0):
-            if (self.analysis_flag == True):
-                # check if the increase is reaching the stable
-                if (abs(self.storage[len(self.storage) - 1] - data) <= 10):
-                    # when increasing is stable, check peek belongs to which category
-                    if (abs(self.storage[self.starting_index] - data) > 100):
-                        self.l1.setText("solv_272_303")
-                        self.analysis_flag = False
-                    else:
-                        self.l1.setText("285-295")
-                        self.analysis_flag = False
-            # detect the increase
-            elif (self.storage[len(self.storage) - 1] - data >= 10):
-                self.analysis_flag = True
-                self.starting_index = len(self.storage) - 1
-            else:
-                # self.analysis_flag = False
-                self.l1.setText("Sample Type")
-        self.storage.append(data)
-
 
 class Settings(QtGui.QWidget):
 
@@ -226,12 +202,6 @@ class Window(QtGui.QMainWindow):
         self.close_application()
 
     def home(self):
-        ###push buttun
-        # btn = QtGui.QPushButton("Quit", self)
-        # btn.clicked.connect(self.close_application)
-        # btn.resize(btn.sizeHint())
-        # btn.move(410, 270)
-
         #### label
         self.l1 = QtGui.QLabel("", self)
         #self.l1.setAlignment(QtCore.Qt.AlignBottom)
@@ -288,18 +258,6 @@ class Window(QtGui.QMainWindow):
 
     @pyqtSlot()
     def run_event(self):
-
-        # (time, truth) = QInputDialog.getDouble(self, "Sampling Time Interval", "Type the sampling time interval \n%s" %
-        #                                              ("Unit: ms, minimum is 0.1ms"),
-        #                                                 1.0,
-        #                                              0.1, 10000, 0.1)
-
-        # (sample_number, truth) = QInputDialog.getInt(self, "Sample Rate",
-        #                                              "Type the sample rate (default is 2^16) \n%s" %
-        #                                              ("Range is from 100 to 2147483647"),
-        #                                              int(math.pow(2, 16)),
-        #                                              10, 2147483647, 1000)
-
         #choose input binary file path
         #input_file_name = QtGui.QFileDialog.getOpenFileName(self, 'Open File')
         input_file_name = "/home/moez/Desktop/rx"
@@ -311,9 +269,6 @@ class Window(QtGui.QMainWindow):
         else:
             time_interval = float(self.setting_dialog_window.le2.text())
             sample_number = numpy.ceil(self.sample_number_cal(time_interval))
-
-            #print ("Selected sampling time interval is %0.1f ms") % time_interval
-            #print ("Calculated sampling rate is %i") % sample_number
 
             self.file_reading_thread = QThread()
             self.read = File_Reading_Save(input_file_name, self.setting_dialog_window.le1.text(), sample_number, time_interval, self.l1)

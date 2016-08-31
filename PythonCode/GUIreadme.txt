@@ -44,4 +44,4 @@ First released for hospital is in scimindr folder. It generating the data in bel
 115.96
 116.27
 
-GUIv02 has the live probability density plot feature. 
+GUIv02 has the live probability density plot and live time vs power plot feature.
