@@ -52,7 +52,16 @@ class File_Reading_Save(QThread):
         self.starting_index = 0
         self.l1 = l1
         self.storage = []
-
+        self.output_file_header =   "ATF\t1.0\n" \
+                                    "7\t2\n" \
+                                    '''"AcquisitionMode=Gap Free"\t\n''' \
+                                    '''"Comment="\t\n''' \
+                                    '''"YTop=1000.0"\t\n''' \
+                                    '''"YBottom=-1000.0"\t\n''' \
+                                    '''"SweepStartTimesMS=0.000"\t\n''' \
+                                    '''"SignalsExported=mW"\t\n''' \
+                                    '''"Signals="\t"mW"\n''' \
+                                    '''"Time (s)"\t"Trace #1 (mW)"\n'''
     # return a generator of a file
     def file_generator(self, thefile):
         # define file pointer when operating over an open file
@@ -73,6 +82,8 @@ class File_Reading_Save(QThread):
 
         #open output txt file
         self.output_file = open(self.output_file, 'w')
+        #write header in output file
+        self.output_file.write(self.output_file_header)
         #
         generator = self.file_generator(self.input_file)
         self.avg_display(generator)
@@ -100,14 +111,14 @@ class File_Reading_Save(QThread):
             else:
                 sum = sum + data_float[0]
 
-                text = "%.3f    %.2f\n" % (timmer, sum / self.QUEUE_SIZE)
+                text = "%.3f\t%.2f\n" % (timmer, sum / float(self.QUEUE_SIZE + 1))
                 self.output_file.write(text)
            
                 if printerCount == 1001:
                     print text
                     printerCount = 1
 
-                timmer = timmer + self.time_interval/1000
+                timmer = timmer + self.time_interval/1000.0 #ms
                 printerCount = printerCount + 1
                 sum = 0.0
                 sampleCount = 0

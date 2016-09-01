@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Power
-# Generated: Thu Aug  4 14:57:01 2016
+# Generated: Thu Sep  1 15:28:21 2016
 ##################################################
 
 if __name__ == '__main__':
@@ -46,10 +46,34 @@ class Power(grc_wxgui.top_block_gui):
         self.mean_length = mean_length = 5e3
         self.freq = freq = 5.8e09
         self.MuteTx = MuteTx = False
+        self.Gain = Gain = 60
 
         ##################################################
         # Blocks
         ##################################################
+        _Gain_sizer = wx.BoxSizer(wx.VERTICAL)
+        self._Gain_text_box = forms.text_box(
+        	parent=self.GetWin(),
+        	sizer=_Gain_sizer,
+        	value=self.Gain,
+        	callback=self.set_Gain,
+        	label='Gain',
+        	converter=forms.int_converter(),
+        	proportion=0,
+        )
+        self._Gain_slider = forms.slider(
+        	parent=self.GetWin(),
+        	sizer=_Gain_sizer,
+        	value=self.Gain,
+        	callback=self.set_Gain,
+        	minimum=10,
+        	maximum=90,
+        	num_steps=80,
+        	style=wx.SL_HORIZONTAL,
+        	cast=int,
+        	proportion=1,
+        )
+        self.Add(_Gain_sizer)
         self.wxgui_scopesink2_1 = scopesink2.scope_sink_c(
         	self.GetWin(),
         	title="RXScope Plot",
@@ -73,12 +97,12 @@ class Power(grc_wxgui.top_block_gui):
         	decimal_places=2,
         	ref_level=0,
         	sample_rate=samp_rate,
-        	number_rate=1,
-        	average=True,
+        	number_rate=10,
+        	average=False,
         	avg_alpha=1,
         	label="RX mag",
         	peak_hold=False,
-        	show_gauge=True,
+        	show_gauge=False,
         )
         self.Add(self.wxgui_numbersink2_1.win)
         self.uhd_usrp_source_0 = uhd.usrp_source(
@@ -91,8 +115,8 @@ class Power(grc_wxgui.top_block_gui):
         self.uhd_usrp_source_0.set_subdev_spec("A:B", 0)
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
         self.uhd_usrp_source_0.set_center_freq(freq, 0)
-        self.uhd_usrp_source_0.set_gain(54, 0)
-        self.uhd_usrp_source_0.set_antenna("RX2", 0)
+        self.uhd_usrp_source_0.set_gain(Gain, 0)
+        self.uhd_usrp_source_0.set_antenna("TX/RX", 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -109,8 +133,8 @@ class Power(grc_wxgui.top_block_gui):
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_float*1, vect_len)
         self.blocks_multiply_const_vxx_2 = blocks.multiply_const_vff((1000, ))
         self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((1e3, ))
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vect_len, "/home/moez/Desktop/gnu_binary_data/wRx_A_1", False)
-        self.blocks_file_sink_0.set_unbuffered(False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vect_len, "/home/moez/Desktop/rx", False)
+        self.blocks_file_sink_0.set_unbuffered(True)
         self.blocks_complex_to_mag_1_0 = blocks.complex_to_mag(1)
         self.blocks_complex_to_mag_1 = blocks.complex_to_mag(1)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, mean_length, 1, 0)
@@ -153,9 +177,9 @@ class Power(grc_wxgui.top_block_gui):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
+        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
         self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
         self.wxgui_scopesink2_1.set_sample_rate(self.samp_rate)
-        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
 
     def get_mean_length(self):
         return self.mean_length
@@ -169,9 +193,9 @@ class Power(grc_wxgui.top_block_gui):
 
     def set_freq(self, freq):
         self.freq = freq
-        self.uhd_usrp_sink_0.set_center_freq(self.freq, 0)
         self.uhd_usrp_source_0.set_center_freq(self.freq, 0)
         self.uhd_usrp_source_0.set_center_freq(self.freq, 1)
+        self.uhd_usrp_sink_0.set_center_freq(self.freq, 0)
 
     def get_MuteTx(self):
         return self.MuteTx
@@ -180,6 +204,16 @@ class Power(grc_wxgui.top_block_gui):
         self.MuteTx = MuteTx
         self._MuteTx_check_box.set_value(self.MuteTx)
         self.Mute.set_mute(bool(self.MuteTx))
+
+    def get_Gain(self):
+        return self.Gain
+
+    def set_Gain(self, Gain):
+        self.Gain = Gain
+        self.uhd_usrp_source_0.set_gain(self.Gain, 0)
+        	
+        self._Gain_slider.set_value(self.Gain)
+        self._Gain_text_box.set_value(self.Gain)
 
 
 def main(top_block_cls=Power, options=None):
